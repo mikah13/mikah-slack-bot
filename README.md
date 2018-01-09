@@ -56,7 +56,23 @@ Now, let's install a library called BotKit which helps to quickly build a bot fo
 $ npm install --save botkit
 ```
 
+Once your botkit module is ready, you can now begin the fun part
+
 ## Implement Functions
+
+Let's create an index.js inside the SlackBot folder. This is the file where we will implement our bot's functions and behaviours. To initialize our bot, put the folling code inside index.js:
+
+```console
+var Botkit = require('botkit')
+
+var controller = Botkit.slackbot({
+  debug: true
+})
+
+controller.spawn({
+  token: 'your api token',
+}).startRTM()
+```
 
 
 ## Add Cleverbot
