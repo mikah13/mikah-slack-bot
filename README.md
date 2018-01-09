@@ -1,6 +1,6 @@
-<h1>Mikah Slack Bot</h1>
+<h1 style="text-align:center">Mikah Slack Bot</h1>
 
-## Overview
+### Overview
 
 This repo contains a set of short tutorials with code snippets describing the process of creating a small and simple bot for Slack.
 
