@@ -74,5 +74,7 @@ controller.spawn({
 }).startRTM()
 ```
 
+Notice that there is an API token missing in the snippet. Our bot will use this token to interact with users in your Slack workspace using something called <a href="https://api.slack.com/rtm">Real Time Messaging API</a>. In order to get the API token, following the instruction <a href="https://my.slack.com/services/new/bot">here</a> and then you will see something like this: 
 
+<img src="https://raw.githubusercontent.com/mikah13/mikah-slack-bot/master/api_token_img.png"/>
 ## Add Cleverbot
