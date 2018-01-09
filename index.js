@@ -1,14 +1,34 @@
+var cleverbot = require("cleverbot.io"),
+    cleverbot = new cleverbot('API_USER', 'API_KEY');
+cleverbot.setNick("YOUR NAME");
+cleverbot.create(function(err, session) {
+    if (err) {
+        console.log('cleverbot create fail.');
+    } else {
+        console.log('cleverbot create success.');
+    }
+});
+
 var Botkit = require('botkit')
-
+var request = require('request-promise');
 var controller = Botkit.slackbot({debug: true})
+const slackToken = 'SLACK_TOKEN';
+const youtubeKey = 'YOUTUBE_KEY';
+controller.spawn({token: slackToken}).startRTM()
 
-controller.spawn({token: 'YOUR_TOKEN'}).startRTM()
-
-// Welcome Message on channel join
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
 });
 
+// Enable Clever Bot
+// controller.hears('', 'direct_message,direct_mention,mention', function(bot, message) {
+//     var msg = message.text;
+//     cleverbot.ask(msg, function(err, response) {
+//         if (!err) {
+//             bot.reply(message, response);
+//         }
+//     });
+// })
 controller.hears([
     'hello', 'hi', 'hey'
 ], [
@@ -31,8 +51,45 @@ controller.hears([
         }
     })
 })
-
-controller.hears(['your name'], [
+controller.hears([
+    'I love you', 'Love you'
+], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    bot.api.reactions.add({
+        timestamp: message.ts,
+        channel: message.channel,
+        name: 'heart'
+    }, function(err, res) {
+        if (err) {
+            bot.botkit.log('Failed to add emoji reaction :(', err);
+        }
+    });
+    controller.storage.users.get(message.user, function(err, user) {
+        bot.reply(message, 'I love you too babe <3')
+    })
+});
+controller.hears([
+    'Do you love me?', 'How much do you love me?'
+], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    bot.api.reactions.add({
+        timestamp: message.ts,
+        channel: message.channel,
+        name: 'heart'
+    }, function(err, res) {
+        if (err) {
+            bot.botkit.log('Failed to add emoji reaction :(', err);
+        }
+    });
+    controller.storage.users.get(message.user, function(err, user) {
+        bot.reply(message, 'I love you more than anything babe <3\n' + 'https://youtu.be/3JWTaaS7LdU')
+    })
+});
+controller.hears([
+    'your name', "what's your name?", 'who are you?', 'what is your name?'
+], [
     'direct_message', 'direct_mention', 'mention'
 ], function(bot, message) {
     controller.storage.users.get(message.user, function(err, user) {
@@ -40,10 +97,10 @@ controller.hears(['your name'], [
         bot.reply(message, `My name is ${bot.identity.name}`)
     })
 })
+
 controller.hears([
     'what is my name', 'who am i'
 ], 'direct_message,direct_mention,mention', function(bot, message) {
-
     controller.storage.users.get(message.user, function(err, user) {
         if (user && user.name) {
             bot.reply(message, 'Your name is ' + user.name);
@@ -56,14 +113,11 @@ controller.hears([
                             {
                                 pattern: 'yes',
                                 callback: function(response, convo) {
-                                    // since no further messages are queued after this,
-                                    // the conversation will end naturally with status == 'completed'
                                     convo.next();
                                 }
                             }, {
                                 pattern: 'no',
                                 callback: function(response, convo) {
-                                    // stop the conversation. this will cause it to end with status == 'stopped'
                                     convo.stop();
                                 }
                             }, {
@@ -74,15 +128,11 @@ controller.hears([
                                 }
                             }
                         ]);
-
                         convo.next();
-
-                    }, {'key': 'nickname'}); // store the results in a field called nickname
-
+                    }, {'key': 'nickname'});
                     convo.on('end', function(convo) {
                         if (convo.status == 'completed') {
                             bot.reply(message, 'OK! I will update my dossier...');
-
                             controller.storage.users.get(message.user, function(err, user) {
                                 if (!user) {
                                     user = {
@@ -96,7 +146,6 @@ controller.hears([
                             });
 
                         } else {
-                            // this happens if the conversation ended prematurely for some reason
                             bot.reply(message, 'OK, nevermind!');
                         }
                     });
@@ -121,4 +170,21 @@ controller.hears(['You can call me (.*)'], [
             bot.reply(message, 'Sure, Master ' + user.name)
         })
     })
+})
+controller.hears([
+    "play (.*)", "Play (.*)", "!play (.*)"
+], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    var searchTerm = message.match[1];
+    var url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${searchTerm}&key=${youtubeKey}`
+    let videoURL;
+    request(url).then(function(data) {
+        data = JSON.parse(data).items[0].id.videoId;
+        videoURL = `https://www.youtube.com/watch?v=${data}`;
+        controller.storage.users.get(message.user, function(err, user) {
+            bot.reply(message, 'This is what I found: ' + videoURL)
+        })
+    })
+
 })
