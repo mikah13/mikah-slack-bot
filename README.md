@@ -150,6 +150,95 @@ controller.hears([
 })
 ```
 
-So you need to remind the youtubeKey with your API key you got from the Google Developer account credentials. And it's just that easy, you will have a bot that can search a song based on what you enter. 
+So you need to remind the youtubeKey with your API key you got from the Google Developer account credentials. And it's just that easy, you will have a bot that can search a song based on what you enter, something that looks like this: 
 
-## Add Cleverbot
+<img src="https://raw.githubusercontent.com/mikah13/mikah-slack-bot/master/screen_shot.png"/>
+
+## Add Cleverbot.io
+
+So far, our bot can only follow what we instruct them in a hard-coded way. To make it smarter and more like 'human', let's use a library called Cleverbot.io. So let's replace all the controller.hears function we wrote with this:
+
+```javascript
+controller.hears('','direct_message,direct_mention,mention',function(bot,message) {
+})
+```
+
+So the final code at this point should be like:
+
+```javascript
+var Botkit = require('botkit');
+var request = require('request-promise');
+var controller = Botkit.slackbot({debug: true});
+controller.spawn({token: slackToken}).startRTM();
+controller.hears('','direct_message,direct_mention,mention',function(bot,message) {
+})
+```
+
+Now, let's install the Cleverbot library. Type the following in the Terminal:
+
+```console
+$ npm install --save cleverbot.io
+```
+
+Then go to <a href="https://cleverbot.io/">this</a> website and sign up for an account to get an API_KEY and API_USER. After you are done, let's head back to index.js and add these codes to the very beginning of your file. Don't forget to replace the API_KEY and API_USER with your own API keys
+
+```javascript
+var cleverbot = require("cleverbot.io"),
+cleverbot = new cleverbot('API_USER', 'API_KEY');
+cleverbot.setNick("Bob");
+cleverbot.create(function (err, session) {
+    if (err) {
+        console.log('cleverbot create fail.');
+    } else {
+        console.log('cleverbot create success.');
+    }
+});
+```
+Final step, add this code snippet to the hear function:
+
+```javascript
+controller.hears('','direct_message,direct_mention,mention',function(bot,message) {
+    var msg = message.text;
+    cleverbot.ask(msg, function (err, response) {
+        if (!err) {
+            bot.reply(message, response);
+        } else {
+            console.log('cleverbot err: ' + err);
+        }
+    });
+})
+```
+
+The final code should be like:
+
+```javascript
+var cleverbot = require("cleverbot.io"),
+cleverbot = new cleverbot('API_USER', 'API_KEY');
+cleverbot.setNick("Bob");
+cleverbot.create(function (err, session) {
+    if (err) {
+        console.log('cleverbot create fail.');
+    } else {
+        console.log('cleverbot create success.');
+    }
+});
+var Botkit = require('botkit');
+var request = require('request-promise');
+var controller = Botkit.slackbot({debug: true});
+controller.spawn({token: slackToken}).startRTM();
+controller.hears('','direct_message,direct_mention,mention',function(bot,message) {
+  var msg = message.text;
+    cleverbot.ask(msg, function (err, response) {
+        if (!err) {
+            bot.reply(message, response);
+        } else {
+            console.log('cleverbot err: ' + err);
+        }
+    });
+})
+```
+And don't forget to enter this magic line to start your very first Slack bot:
+
+```console
+$ node index.js
+```
