@@ -1,4 +1,4 @@
-<h1 style="text-align:center">Mikah Slack Bot</h1>
+<h1 align="center">Mikah Slack Bot</h1>
 
 ### Overview
 
