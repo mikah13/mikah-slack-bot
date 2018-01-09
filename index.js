@@ -2,7 +2,7 @@ var Botkit = require('botkit')
 
 var controller = Botkit.slackbot({debug: true})
 
-controller.spawn({token: 'xoxb-296916603351-HYkxv4aIBvUdsrnrnsc1Oxsf'}).startRTM()
+controller.spawn({token: 'YOUR_TOKEN'}).startRTM()
 
 // Welcome Message on channel join
 controller.on('channel_join', function(bot, message) {
