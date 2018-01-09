@@ -1,5 +1,7 @@
 <h1>Mikah Slack Bot</h1>
+
 ## Overview
+
 This repo contains a set of short tutorials with code snippets describing the process of creating a small and simple bot for Slack.
 
 Slack is a great tool that helps us, the developers, to communicate and work things easier and more convenient. Compared to other tools we used to use such as Skype, Slack is a way better application in terms of its stability, compatibility on mobile and desktop. More importantly, Slack support tons of applications such as Trello, GitHub,...
