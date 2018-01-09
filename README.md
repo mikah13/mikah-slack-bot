@@ -1,4 +1,4 @@
-<h1 align="center">MIKAH SLACK BOT</h1>
+<h1 align="center" font-size="30">MIKAH SLACK BOT</h1>
 
 ### Overview
 
