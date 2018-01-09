@@ -247,5 +247,5 @@ $ node index.js
 ## Credit
 
 This project was inspired by <a href="https://codeaholicguy.com/2016/04/12/tao-slack-bot-don-gian-voi-nodejs-va-botkit/">this article</a> from codeaholicguy and <a href="http://altitudelabs.com/blog/create-a-slackbot-using-botkit/">this tutorial</a>
-
+. This is also the first guide I make, and English is not my native language so if there are anything that you are not clear, feel free to contact me at my <a href="mailto:anhminhhoang13@gmail.com">e-mail</a>
 
