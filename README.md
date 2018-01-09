@@ -6,5 +6,7 @@ This repo contains a set of short tutorials with code snippets describing the pr
 # Table of Contents
 
 * [Install Node.js](#install-node.js)
-* [Release Types](#release-types)
- 
+* [BotKit](#botkit)
+* [Implement Functions](#implement-functions)
+* [Add Cleverbot](#add-cleverbot)
+
