@@ -19,6 +19,14 @@ Slack Bot is another application that we can have on Slack which helps us do thi
 ## Install Node.js
 You can find the latest version Node.js for your Operating System <a href="https://nodejs.org/en/">here</a>
 
+After installing Node.js, you are also recommended to install Node Version Manager (nvm) which basically helps you to have multiple versions of Node.js in your system. However, this step is optional.
+
+To check the your current version of Node, enter the following in your Terminal (UNIX,LINUX) or Command Line (Window)
+
+```console
+$ npm -v
+```
+
 ## BotKit
 
 
