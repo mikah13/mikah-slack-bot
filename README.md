@@ -21,14 +21,40 @@ You can find the latest version Node.js for your Operating System <a href="https
 
 After installing Node.js, you are also recommended to install Node Version Manager (nvm) which basically helps you to have multiple versions of Node.js in your system. However, this step is optional.
 
-To check the your current version of Node, enter the following in your Terminal (UNIX,LINUX) or Command Line (Window)
+To check the your current version of Node, enter the following in your Terminal (UNIX,LINUX) or Command Line (Window):
+
+```console
+$ node -v
+```
+
+This should return you a version later than 5.6.0. Also, to check the current version of npm, enter the following:
 
 ```console
 $ npm -v
 ```
+After this point, your have successfully installed Node.js. Let's get into the next step.
 
 ## BotKit
+You need to have a folder for your project. Let's make a folder called SlackBot and change directory into the folder
 
+```console
+$ mkdir SlackBot
+$ cd SlackBot
+```
+
+To create a Node.js project, simply type the following:
+
+```console
+$ npm init
+```
+
+If you follow the above steps, in the SlackBot folder you will see a node_modules folder which stores all the built-in modules that Node already prepared for you. Don't worry about this folder yet, you won't have to touch this folder. You should also a file named package.json. This file will store any information of your application. You can leave it as default if you wish.
+
+Now, let's install a library called BotKit which helps to quickly build a bot for Slack. You can find the documentary for the BotKit API <a href="https://github.com/howdyai/botkit">here</a>. To install BotKit, type the following:
+
+```console
+$ npm install --save botkit
+```
 
 ## Implement Functions
 
