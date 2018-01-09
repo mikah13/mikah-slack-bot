@@ -77,4 +77,79 @@ controller.spawn({
 Notice that there is an API token missing in the snippet. Our bot will use this token to interact with users in your Slack workspace using something called <a href="https://api.slack.com/rtm">Real Time Messaging API</a>. In order to get the API token, following the instruction <a href="https://my.slack.com/services/new/bot">here</a> and then you will see something like this: 
 
 <img src="https://raw.githubusercontent.com/mikah13/mikah-slack-bot/master/api_token_img.png"/>
+
+Once you get there, let's implement our bot's first function. So we want our bot to say something to us when we say Hello. 
+
+```javascript
+controller.hears(
+  ['hello', 'hi'],
+  ['direct_message', 'direct_mention', 'mention'],
+  function(bot, message) {
+    controller.storage.users.get(message.user, function(err, user) {
+        if (user && user.name) {
+            bot.reply(message, 'Hello, ' + user.name + '!')
+        } else {
+            bot.reply(message, 'Hi!')
+        }
+    })
+})
+```
+As you can see, the controller.hears take in 3 parameters. The first one is an array of what the user input it, in this case, hello or hi. The second parameter is how the bot will get the message, it can be through direct message, direct mention or mention. And the third parameter is where our bot will reply with a message Hi if it doesn't know the user name or Hello, ... if the user name is set. To set the username, let's try the following code:
+
+```javascript
+controller.hears(['You can call me (.*)'], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    var name = message.match[1]
+    controller.storage.users.get(message.user, function(err, user) {
+        if (!user) {
+            user = {
+                id: message.user
+            }
+        }
+        user.name = name
+        controller.storage.users.save(user, function(err, id) {
+            bot.reply(message, 'Sure, Master ' + user.name)
+        })
+    })
+})
+```
+If you type something like: You can call me Bob, then the bot will know your name as Bob and it will later on rememeber you as Bob. The next part I will demonstrate how to implement a YouTube Search for our bot. So in order to do so, you have to register a Google developer account where you will get another API_key. Please follow the instruction in <a href="https://developers.google.com/youtube/v3/getting-started">this</a> documentary to get your Google API key. Once you get that, you can access the YouTube Search API. More information about the YouTube API can be found <a href="https://developers.google.com/youtube/v3/docs/search/list">here</a>
+
+So when it comes to API, one thing we usually use is Ajax. It is pretty simple to use Ajax with jQuery. However in this app, using jQuery is not that easy and convenient. Fortunately, there is another node module out there to help us to cope with this. So let's install two libraries called *require* and *require-promise*. Let's type the following in your Terminal / Command Line:
+
+```console
+$ npm install require
+$ npm install require-promise
+```
+
+and add the following to the beginning of your index.js.
+
+```javascript
+var request = require('request-promise');
+```
+
+Here is the code to work with the YouTube API:
+
+```javascript
+controller.hears([
+    "play (.*)", "Play (.*)", "!play (.*)"
+], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    var searchTerm = message.match[1];
+    var url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${searchTerm}&key=${youtubeKey}`
+    let videoURL;
+    request(url).then(function(data) {
+        data = JSON.parse(data).items[0].id.videoId;
+        videoURL = `https://www.youtube.com/watch?v=${data}`;
+        controller.storage.users.get(message.user, function(err, user) {
+            bot.reply(message, 'This is what I found: ' + videoURL)
+        })
+    })
+})
+```
+
+So you need to remind the youtubeKey with your API key you got from the Google Developer account credentials. And it's just that easy, you will have a bot that can search a song based on what you enter. 
+
 ## Add Cleverbot
