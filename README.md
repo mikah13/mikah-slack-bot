@@ -59,7 +59,7 @@ $ npm install --save botkit
 
 Once your botkit module is ready, you can now begin the fun part
 
-## Implement Functions
+## Implemented Functions
 
 Let's create an index.js inside the SlackBot folder. This is the file where we will implement our bot's functions and behaviours. To initialize our bot, put the folling code inside index.js:
 
@@ -75,11 +75,11 @@ controller.spawn({
 }).startRTM()
 ```
 
-Notice that there is an API token missing in the snippet. Our bot will use this token to interact with users in your Slack workspace using something called <a href="https://api.slack.com/rtm">Real Time Messaging API</a>. In order to get the API token, following the instruction <a href="https://my.slack.com/services/new/bot">here</a> and then you will see something like this: 
+Notice that there is an API token missing in the snippet. Our bot will use this token to interact with users in your Slack workspace using something called <a href="https://api.slack.com/rtm">Real Time Messaging API</a>. In order to get the API token, following the instruction <a href="https://my.slack.com/services/new/bot">here</a> and then you will see something like this:
 
 <img src="https://raw.githubusercontent.com/mikah13/mikah-slack-bot/master/api_token_img.png"/>
 
-Once you get there, let's implement our bot's first function. So we want our bot to say something to us when we say Hello. 
+Once you get there, let's implement our bot's first function. So we want our bot to say something to us when we say Hello.
 
 ```javascript
 controller.hears(
@@ -151,7 +151,7 @@ controller.hears([
 })
 ```
 
-So you need to remind the youtubeKey with your API key you got from the Google Developer account credentials. And it's just that easy, you will have a bot that can search a song based on what you enter, something that looks like this: 
+So you need to remind the youtubeKey with your API key you got from the Google Developer account credentials. And it's just that easy, you will have a bot that can search a song based on what you enter, something that looks like this:
 
 <img src="https://raw.githubusercontent.com/mikah13/mikah-slack-bot/master/screen_shot.png"/>
 
@@ -248,4 +248,3 @@ $ node index.js
 
 This project was inspired by <a href="https://codeaholicguy.com/2016/04/12/tao-slack-bot-don-gian-voi-nodejs-va-botkit/">this article</a> from codeaholicguy and <a href="http://altitudelabs.com/blog/create-a-slackbot-using-botkit/">this tutorial</a>
 . This is also the first guide I make, and English is not my native language so if there are anything that you are not clear, feel free to contact me at my <a href="mailto:anhminhhoang13@gmail.com">e-mail.</a> I am always happy to answer any of your questions
-
