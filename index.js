@@ -1,34 +1,34 @@
-var cleverbot = require("cleverbot.io"),
-    cleverbot = new cleverbot('API_USER', 'API_KEY');
-cleverbot.setNick("YOUR NAME");
-cleverbot.create(function(err, session) {
-    if (err) {
-        console.log('cleverbot create fail.');
-    } else {
-        console.log('cleverbot create success.');
-    }
-});
-
-var Botkit = require('botkit')
-var request = require('request-promise');
-var controller = Botkit.slackbot({debug: true})
-const slackToken = 'SLACK_TOKEN';
-const youtubeKey = 'YOUTUBE_KEY';
-controller.spawn({token: slackToken}).startRTM()
-
+// let cleverbot = require("cleverbot.io"),
+//     cleverbot = new cleverbot('4CbvsmdXe8zheP7d', 'zpcVvOFlaUYbYOyeqGmlx7v2ltwQdiWC');
+// cleverbot.setNick("Mike");
+// cleverbot.create(function(err, session) {
+//     if (err) {
+//         console.log('cleverbot create fail.');
+//     } else {
+//         console.log('cleverbot create success.');
+//     }
+// });
+const Botkit = require('botkit')
+const request = require('request-promise');
+let controller = Botkit.slackbot({debug: true})
+const slackToken = 'Your Slack Token';
+const youtubeKey = 'Your Youtube API KEY';
+const googleMapKey = 'Your Google API KEY';
+controller.spawn({token: slackToken}).startRTM();
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
 });
 
 // Enable Clever Bot
 // controller.hears('', 'direct_message,direct_mention,mention', function(bot, message) {
-//     var msg = message.text;
+//     let msg = message.text;
 //     cleverbot.ask(msg, function(err, response) {
 //         if (!err) {
 //             bot.reply(message, response);
 //         }
 //     });
 // })
+
 controller.hears([
     'hello', 'hi', 'hey'
 ], [
@@ -50,7 +50,8 @@ controller.hears([
             bot.reply(message, 'Hello!')
         }
     })
-})
+});
+
 controller.hears([
     'I love you', 'Love you'
 ], [
@@ -69,6 +70,7 @@ controller.hears([
         bot.reply(message, 'I love you too babe <3')
     })
 });
+
 controller.hears([
     'Do you love me?', 'How much do you love me?'
 ], [
@@ -87,6 +89,7 @@ controller.hears([
         bot.reply(message, 'I love you more than anything babe <3\n' + 'https://youtu.be/3JWTaaS7LdU')
     })
 });
+
 controller.hears([
     'your name', "what's your name?", 'who are you?', 'what is your name?'
 ], [
@@ -96,7 +99,7 @@ controller.hears([
 
         bot.reply(message, `My name is ${bot.identity.name}`)
     })
-})
+});
 
 controller.hears([
     'what is my name', 'who am i'
@@ -155,31 +158,13 @@ controller.hears([
     });
 });
 
-controller.hears(['You can call me (.*)'], [
+controller.hears(["!play (.*)"], [
     'direct_message', 'direct_mention', 'mention'
 ], function(bot, message) {
-    var name = message.match[1]
-    controller.storage.users.get(message.user, function(err, user) {
-        if (!user) {
-            user = {
-                id: message.user
-            }
-        }
-        user.name = name
-        controller.storage.users.save(user, function(err, id) {
-            bot.reply(message, 'Sure, Master ' + user.name)
-        })
-    })
-})
-controller.hears([
-    "play (.*)", "Play (.*)", "!play (.*)"
-], [
-    'direct_message', 'direct_mention', 'mention'
-], function(bot, message) {
-    var searchTerm = message.match[1];
-    var url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${searchTerm}&key=${youtubeKey}`
+    let searchTerm = message.match[1];
+    let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${searchTerm}&key=${youtubeKey}`
     let videoURL;
-    request(url).then(function(data) {
+    request(url).then(data => {
         data = JSON.parse(data).items[0].id.videoId;
         videoURL = `https://www.youtube.com/watch?v=${data}`;
         controller.storage.users.get(message.user, function(err, user) {
@@ -187,4 +172,59 @@ controller.hears([
         })
     })
 
+});
+
+controller.hears(["!from (.*) to (.*)"], [
+    'direct_message', 'direct_mention', 'mention'
+], function(bot, message) {
+    let location = message.match[1].split(' ').join('+');
+    let destination = message.match[2].split(' ').join('+');
+    let travel_mode;
+    bot.startConversation(message, function(err, convo) {
+        if (!err) {
+            convo.say('And what type of transportations are you using?')
+            convo.ask('driving, walking, transit, bicycling', function(response, convo) {
+                travel_mode = response.text.toLowerCase();
+                convo.next();
+            });
+            convo.on('end', function(convo) {
+                let url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${location}&destinations=${destination}&mode=${travel_mode}&language=en&key=${googleMapKey}`
+                request(url).then(data => {
+                    data = JSON.parse(data);
+                    let location_address = data.origin_addresses[0];
+                    let destination_adress = data.destination_addresses[0];
+                    let distance = data.rows[0].elements[0].distance.text;
+                    let duration = data.rows[0].elements[0].duration.text;
+                    controller.storage.users.get(message.user, function(err, user) {
+                        bot.reply(message, `Your location: ${location_address}\nYour Destination: ${destination_adress}\nDistance: ${distance}\nEstimated Travel time: ${duration}`)
+                    })
+                })
+            });
+        }
+    });
+
 })
+//I tried to make a spotify API call.
+
+// controller.hears(["!spotify (.*)"], [
+//     'direct_message', 'direct_mention', 'mention'
+// ], function(bot, message) {
+//     let query = message.match[1];
+//     let accessToken = 'BQDPkJ-88RAv3hhEHrNBBzfW-Sty9PlJiRillvIWFMIm2XJTNAj9GW3zL95V7A1tX-M898_h0EGHOzCoqhVxBmw1eGxftu9AJdCsdCmuXtL-p9TUn2xjhWbLwGgkBNAGSD1a3p81MJ_tCSGI42KZDvNaWeZTR7Ibdw'
+//     let url = `https://api.spotify.com/v1/search?q=${query}&type=artist,album,track`;
+//     let options = {
+//         url: url,
+//         headers: {
+//             'Authorization': `Basic ${accessToken}`
+//         }
+//     }
+//     request(options).then(data => {
+//         data = JSON.parse(data);
+//         controller.storage.users.get(message.user, function(err, user) {
+//             bot.reply(message, `Here are the results from Spotify:\n Arists: ${data.artists.items[0].external_urls.spotify}\nTracks: ${data.tracks.items[0].external_urls.spotify}\nAlbums: ${data.albums.items[0].external_urls.spotify} `)
+//         });
+//     })
+//
+// })
+//     }
+// }

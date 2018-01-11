@@ -12,6 +12,6 @@
     "botkit": "^0.6.7",
     "cleverbot.io": "^1.0.4",
     "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request-promise":"^4.2.2"
   }
 }
