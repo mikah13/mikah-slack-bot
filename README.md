@@ -15,6 +15,7 @@ Slack Bot is another application that we can have on Slack which helps us do thi
 * [BotKit](#botkit)
 * [Implement Functions](#implement-functions)
 * [Add Cleverbot](#add-cleverbot)
+* [User Guide](#user-guide)
 * [Credit](#credit)
 
 ## Install Node.js
@@ -243,6 +244,7 @@ And don't forget to enter this magic line to start your very first Slack bot:
 ```console
 $ node index.js
 ```
+## User Guide
 
 ## Credit
 
