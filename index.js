@@ -8,12 +8,23 @@
 //         console.log('cleverbot create success.');
 //     }
 // });
+// const express = require('express');
+// const app = express();
+// const port = process.env.PORT || 4205;
+// const router = express.Router();
 const Botkit = require('botkit')
 const request = require('request-promise');
+// app.listen(port, function(req, res) {
+//     console.info(`Started Express server on port ${port}`)
+// });
+
+// exports.fn = {
+//     slackBot() {
 let controller = Botkit.slackbot({debug: true})
-const slackToken = 'Your Slack Token';
-const youtubeKey = 'Your Youtube API KEY';
-const googleMapKey = 'Your Google API KEY';
+const slackToken = 'SLACK_TOKEN';
+const youtubeKey = 'YOUTUBE_KEY';
+const googleMapKey = 'GOOGLE_MAP_KEY';
+const weatherKey = 'DARKSKY_KEY';
 controller.spawn({token: slackToken}).startRTM();
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
@@ -191,18 +202,66 @@ controller.hears(["!from (.*) to (.*)"], [
                 let url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${location}&destinations=${destination}&mode=${travel_mode}&language=en&key=${googleMapKey}`
                 request(url).then(data => {
                     data = JSON.parse(data);
-                    let location_address = data.origin_addresses[0];
-                    let destination_adress = data.destination_addresses[0];
-                    let distance = data.rows[0].elements[0].distance.text;
-                    let duration = data.rows[0].elements[0].duration.text;
-                    controller.storage.users.get(message.user, function(err, user) {
-                        bot.reply(message, `Your location: ${location_address}\nYour Destination: ${destination_adress}\nDistance: ${distance}\nEstimated Travel time: ${duration}`)
-                    })
+                    if (data.rows[0].elements[0] === "OK") {
+                        let location_address = data.origin_addresses[0];
+                        let destination_adress = data.destination_addresses[0];
+                        let distance = data.rows[0].elements[0].distance.text;
+                        let duration = data.rows[0].elements[0].duration.text;
+                        controller.storage.users.get(message.user, function(err, user) {
+                            bot.reply(message, `Your location: ${location_address}\nYour Destination: ${destination_adress}\nDistance: ${distance}\nEstimated Travel time: ${duration}`)
+                        })
+                    } else {
+                        controller.storage.users.get(message.user, function(err, user) {
+                            bot.reply(message, `There is not available route for your destination.`)
+                        })
+                    }
                 })
             });
         }
     });
 
+})
+
+controller.hears(["!weather (.*)"], [
+    'direct_message', 'direction_mention', 'mention'
+], function(bot, message) {
+    let place = message.match[1].split(' ').join('+');
+    let google_url = `https://maps.googleapis.com/maps/api/geocode/json?address=${place}&key=${googleMapKey}`;
+    request(google_url).then(data => {
+        data = JSON.parse(data);
+        let address = data.results[0].formatted_address;
+        let lat = data.results[0].geometry.location.lat;
+        let lng = data.results[0].geometry.location.lng;
+        let weather_url = `https://api.darksky.net/forecast/${weatherKey}/${lat},${lng}?units=si&exclude=minutely,daily,alert,flags`;
+        request(weather_url).then(weatherData => {
+            weatherData = JSON.parse(weatherData);
+            let sunny = ":sunny:";
+            let rainy = ":thunder_cloud_and_rain:";
+            let cloudy = ":barely_sunny:";
+            let snowy = ":snow_cloud:";
+
+            let icon = weatherData.currently.icon.split(' ').join('_').toLowerCase();
+            if(icon==="sunny"){
+                icon = sunny;
+            }
+            else if(icon==="rain"){
+                icon = rainy;
+            }
+            else if(icon==="snow"){
+                icon = snowy;
+            }
+            else{
+                icon = cloudy;
+            }
+            let summary = weatherData.hourly.summary;
+            let temp = weatherData.currently.temperature + decodeURI("%C2%B0")+"C";
+            let rain = weatherData.currently.precipProbability * 100 + "%";
+            controller.storage.users.get(message.user, function(err, user) {
+                bot.reply(message, `Your location: ${address}\nWeather Forecast: ${icon} ${summary}\nTemperature: ${temp}\nRain Probability: ${rain}`)
+            })
+
+        })
+    })
 })
 //I tried to make a spotify API call.
 
