@@ -12,12 +12,9 @@ if (!process.env.SLACK_TOKEN) {
     console.log('Error: Specify SLACK_TOKEN in environment');
     process.exit(1);
 }
-const express = require('express');
-const port = process.env.PORT || 4205;
+
 const Botkit = require('botkit')
 const request = require('request-promise');
-
-
 let controller = Botkit.slackbot({debug: true})
 const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
 const googleMapKey = 'AIzaSyATxWJ3aqAaX-gjxrB3Niv0YpjGbQxESmM';
@@ -30,7 +27,6 @@ controller.setupWebserver(process.env.PORT || 3001, function(err, webserver) {
         // handle errors...
     });
 });
-
 
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
