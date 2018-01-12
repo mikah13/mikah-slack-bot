@@ -1,4 +1,4 @@
-let cleverbot = require("cleverbot.io"),
+let cleverbot = require("cleverbot.io");
     cleverbot = new cleverbot('4CbvsmdXe8zheP7d', 'zpcVvOFlaUYbYOyeqGmlx7v2ltwQdiWC');
 cleverbot.setNick("Mike");
 cleverbot.create(function(err, session) {
