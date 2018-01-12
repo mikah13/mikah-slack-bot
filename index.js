@@ -18,14 +18,19 @@ app.listen(port, function(req, res) {
     console.info(`Started Express server on port ${port}`)
 });
 
-exports.fn = {
-    slackBot() {
 let controller = Botkit.slackbot({debug: true})
 const slackToken = 'xoxb-296091153058-szZigcFmJHWCoxZ0wbgZDB52';
 const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
 const googleMapKey = 'AIzaSyATxWJ3aqAaX-gjxrB3Niv0YpjGbQxESmM';
 const weatherKey = '60174b206c1ec5ad81b665c91d64730f';
-controller.spawn({token: slackToken}).startRTM();
+let botSpawn = controller.spawn({token: slackToken});
+botSpawn.startRTM();
+
+controller.setupWebserver(process.env.PORT || 3001, function(err, webserver) {
+    controller.createWebhookEndpoints(webserver, botSpawn, function() {
+        // handle errors...
+    });
+});
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
 });
@@ -282,5 +287,3 @@ controller.hears(["!weather (.*)"], [
 //     })
 //
 // })
-    }
-}
