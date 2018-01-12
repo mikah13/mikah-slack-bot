@@ -267,11 +267,11 @@ controller.hears(["!game"], [
     'direct_message', 'direction_mention', 'mention'
 ], function(bot, message) {
     bot.startConversation(message, function(err, convo) {
-        let user;
+        let player;
         if (!err) {
             convo.say("Let's play a rock, paper, scissor game")
             convo.ask('Which one do you pick ?', function(response, convo) {
-                user = response.text.toLowerCase();
+                player = response.text.toLowerCase();
                 convo.next();
             });
             convo.on('end', function(convo) {
@@ -280,10 +280,12 @@ controller.hears(["!game"], [
                     let computer = options[Math.floor(Math.random()*3)];
                     bot.reply(message, `I picked ${computer}`);
                     let result;
-                    if(computer === user){
+                    console.log(computer);
+                    console.log(player);
+                    if(computer === player){
                         result = "Draw ! :thinking_face:";
                     }
-                    else if((computer === "rock" && user === "paper")||(computer === "paper" && user === "scissor")|| (computer === "scissor" && user ==="rock")){
+                    else if((computer === "rock" && player === "paper")||(computer === "paper" && player === "scissor")|| (computer === "scissor" && player ==="rock")){
                         result = "YOU WIN! :triumph:";
                     }
                     else{
