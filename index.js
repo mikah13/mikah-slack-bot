@@ -1,21 +1,19 @@
-// let cleverbot = require("cleverbot.io"),
-//     cleverbot = new cleverbot('4CbvsmdXe8zheP7d', 'zpcVvOFlaUYbYOyeqGmlx7v2ltwQdiWC');
-// cleverbot.setNick("Mike");
-// cleverbot.create(function(err, session) {
-//     if (err) {
-//         console.log('cleverbot create fail.');
-//     } else {
-//         console.log('cleverbot create success.');
-//     }
-// });
+let cleverbot = require("cleverbot.io"),
+    cleverbot = new cleverbot('4CbvsmdXe8zheP7d', 'zpcVvOFlaUYbYOyeqGmlx7v2ltwQdiWC');
+cleverbot.setNick("Mike");
+cleverbot.create(function(err, session) {
+    if (err) {
+        console.log('cleverbot create fail.');
+    } else {
+        console.log('cleverbot create success.');
+    }
+});
 if (!process.env.SLACK_TOKEN) {
     console.log('Error: Specify SLACK_TOKEN in environment');
     process.exit(1);
 }
 const express = require('express');
-
 const port = process.env.PORT || 4205;
-
 const Botkit = require('botkit')
 const request = require('request-promise');
 
@@ -39,14 +37,14 @@ controller.on('channel_join', function(bot, message) {
 });
 
 // Enable Clever Bot
-// controller.hears('', 'direct_message,direct_mention,mention', function(bot, message) {
-//     let msg = message.text;
-//     cleverbot.ask(msg, function(err, response) {
-//         if (!err) {
-//             bot.reply(message, response);
-//         }
-//     });
-// })
+controller.hears('', 'direct_message,direct_mention,mention', function(bot, message) {
+    let msg = message.text;
+    cleverbot.ask(msg, function(err, response) {
+        if (!err) {
+            bot.reply(message, response);
+        }
+    });
+})
 
 controller.hears([
     'hello', 'hi', 'hey'
