@@ -8,6 +8,10 @@
 //         console.log('cleverbot create success.');
 //     }
 // });
+if (!process.env.SLACK_TOKEN) {
+    console.log('Error: Specify SLACK_TOKEN in environment');
+    process.exit(1);
+}
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 4205;
@@ -19,11 +23,10 @@ app.listen(port, function(req, res) {
 });
 
 let controller = Botkit.slackbot({debug: true})
-const slackToken = 'xoxb-296091153058-szZigcFmJHWCoxZ0wbgZDB52';
 const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
 const googleMapKey = 'AIzaSyATxWJ3aqAaX-gjxrB3Niv0YpjGbQxESmM';
 const weatherKey = '60174b206c1ec5ad81b665c91d64730f';
-let botSpawn = controller.spawn({token: slackToken});
+let botSpawn = controller.spawn({token: process.env.SLACK_TOKEN});
 botSpawn.startRTM();
 
 controller.setupWebserver(process.env.PORT || 3001, function(err, webserver) {
