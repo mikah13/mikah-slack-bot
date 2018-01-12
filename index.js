@@ -13,14 +13,12 @@ if (!process.env.SLACK_TOKEN) {
     process.exit(1);
 }
 const express = require('express');
-const app = express();
+
 const port = process.env.PORT || 4205;
-const router = express.Router();
+
 const Botkit = require('botkit')
 const request = require('request-promise');
-app.listen(port, function(req, res) {
-    console.info(`Started Express server on port ${port}`)
-});
+
 
 let controller = Botkit.slackbot({debug: true})
 const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
@@ -34,6 +32,8 @@ controller.setupWebserver(process.env.PORT || 3001, function(err, webserver) {
         // handle errors...
     });
 });
+
+
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
 });
@@ -210,7 +210,7 @@ controller.hears(["!from (.*) to (.*)"], [
                 let url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${location}&destinations=${destination}&mode=${travel_mode}&language=en&key=${googleMapKey}`
                 request(url).then(data => {
                     data = JSON.parse(data);
-                    if (data.rows[0].elements[0] === "OK") {
+                    if (data.rows[0].elements[0].status === "OK") {
                         let location_address = data.origin_addresses[0];
                         let destination_adress = data.destination_addresses[0];
                         let distance = data.rows[0].elements[0].distance.text;
