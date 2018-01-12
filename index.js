@@ -16,9 +16,9 @@ if (!process.env.SLACK_TOKEN) {
 const Botkit = require('botkit')
 const request = require('request-promise');
 let controller = Botkit.slackbot({debug: true})
-const youtubeKey = '';
-const googleMapKey = '';
-const weatherKey = '';
+const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
+const googleMapKey = 'AIzaSyATxWJ3aqAaX-gjxrB3Niv0YpjGbQxESmM';
+const weatherKey = '60174b206c1ec5ad81b665c91d64730f';
 let botSpawn = controller.spawn({token: process.env.SLACK_TOKEN});
 botSpawn.startRTM();
 
