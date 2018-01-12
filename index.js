@@ -289,11 +289,9 @@ controller.hears(["!game"], [
                     else{
                         result = "Sorry, I win this time :hugging_face:"
                     }
-
                     bot.reply(message,result);
                 })
             })
-        });
     }
 });
 })
