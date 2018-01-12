@@ -278,10 +278,7 @@ controller.hears(["!game"], [
                 let options =['rock','paper','scissor'];
                 controller.storage.users.get(message.user, function(err, user) {
                     let computer = options[Math.floor(Math.random()*3)];
-                    bot.reply(message, `I picked ${computer}`);
                     let result;
-                    console.log(computer);
-                    console.log(player);
                     if(computer === player){
                         result = "Draw ! :thinking_face:";
                     }
@@ -291,7 +288,7 @@ controller.hears(["!game"], [
                     else{
                         result = "Sorry, I win this time :hugging_face:"
                     }
-                    bot.reply(message,result);
+                    bot.reply(message,`I picked ${computer}.\n${result}`);
                 })
             })
     }
