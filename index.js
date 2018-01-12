@@ -280,10 +280,10 @@ controller.hears(["!game"], [
                     let computer = options[Math.floor(Math.random()*3)];
                     bot.reply(message, `I picked ${computer}`);
                     let result;
-                    if(computer === computer){
+                    if(computer === user){
                         result = "Draw ! :thinking_face:";
                     }
-                    else if((computer === "rock" && computer === "paper")||(computer === "paper" && computer === "scissor")|| (computer === "scissor" && computer ==="rock")){
+                    else if((computer === "rock" && user === "paper")||(computer === "paper" && user === "scissor")|| (computer === "scissor" && user ==="rock")){
                         result = "YOU WIN! :triumph:";
                     }
                     else{
