@@ -1,17 +1,22 @@
 {
-  "name": "slackbot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "botkit": "^0.6.7",
-    "cleverbot.io": "^1.0.4",
-    "request": "^2.83.0",
-    "request-promise":"^4.2.2"
-  }
+    "name": "slackbot",
+    "version": "1.0.0",
+    "description": "A Slack Bot created by Mike Hoang",
+    "engines": {
+        "node": "8.9.1"
+    },
+    "main": "index.js",
+    "scripts": {
+        "start": "node index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "botkit": "^0.6.7",
+        "cleverbot.io": "^1.0.4",
+        "request": "^2.83.0",
+        "request-promise": "^4.2.2",
+
+    }
 }

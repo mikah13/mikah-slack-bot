@@ -8,23 +8,23 @@
 //         console.log('cleverbot create success.');
 //     }
 // });
-// const express = require('express');
-// const app = express();
-// const port = process.env.PORT || 4205;
-// const router = express.Router();
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 4205;
+const router = express.Router();
 const Botkit = require('botkit')
 const request = require('request-promise');
-// app.listen(port, function(req, res) {
-//     console.info(`Started Express server on port ${port}`)
-// });
+app.listen(port, function(req, res) {
+    console.info(`Started Express server on port ${port}`)
+});
 
-// exports.fn = {
-//     slackBot() {
+exports.fn = {
+    slackBot() {
 let controller = Botkit.slackbot({debug: true})
-const slackToken = 'SLACK_TOKEN';
-const youtubeKey = 'YOUTUBE_KEY';
-const googleMapKey = 'GOOGLE_MAP_KEY';
-const weatherKey = 'DARKSKY_KEY';
+const slackToken = 'xoxb-296091153058-szZigcFmJHWCoxZ0wbgZDB52';
+const youtubeKey = 'AIzaSyACObD_IqVU6wHYa9uiroiraZbkXDNBwJw';
+const googleMapKey = 'AIzaSyATxWJ3aqAaX-gjxrB3Niv0YpjGbQxESmM';
+const weatherKey = '60174b206c1ec5ad81b665c91d64730f';
 controller.spawn({token: slackToken}).startRTM();
 controller.on('channel_join', function(bot, message) {
     bot.reply(message, "Hi, I'm Mikah's bot. Welcome to the Mikah channel!");
@@ -241,20 +241,17 @@ controller.hears(["!weather (.*)"], [
             let snowy = ":snow_cloud:";
 
             let icon = weatherData.currently.icon.split(' ').join('_').toLowerCase();
-            if(icon==="sunny"){
+            if (icon === "sunny") {
                 icon = sunny;
-            }
-            else if(icon==="rain"){
+            } else if (icon === "rain") {
                 icon = rainy;
-            }
-            else if(icon==="snow"){
+            } else if (icon === "snow") {
                 icon = snowy;
-            }
-            else{
+            } else {
                 icon = cloudy;
             }
             let summary = weatherData.hourly.summary;
-            let temp = weatherData.currently.temperature + decodeURI("%C2%B0")+"C";
+            let temp = weatherData.currently.temperature + decodeURI("%C2%B0") + "C";
             let rain = weatherData.currently.precipProbability * 100 + "%";
             controller.storage.users.get(message.user, function(err, user) {
                 bot.reply(message, `Your location: ${address}\nWeather Forecast: ${icon} ${summary}\nTemperature: ${temp}\nRain Probability: ${rain}`)
@@ -285,5 +282,5 @@ controller.hears(["!weather (.*)"], [
 //     })
 //
 // })
-//     }
-// }
+    }
+}
