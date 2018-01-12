@@ -262,6 +262,41 @@ controller.hears(["!weather (.*)"], [
         })
     })
 })
+
+controller.hears(["!game"], [
+    'direct_message', 'direction_mention', 'mention'
+], function(bot, message) {
+    bot.startConversation(message, function(err, convo) {
+        let user;
+        if (!err) {
+            convo.say("Let's play a rock, paper, scissor game")
+            convo.ask('Which one do you pick ?', function(response, convo) {
+                user = response.text.toLowerCase();
+                convo.next();
+            });
+            convo.on('end', function(convo) {
+                let options =['rock','paper','scissor'];
+                controller.storage.users.get(message.user, function(err, user) {
+                    let computer = options[Math.floor(Math.random()*3)];
+                    bot.reply(message, `I picked ${computer}`);
+                    let result;
+                    if(computer === user){
+                        result = "Draw ! :thinking_face:";
+                    }
+                    else if((computer === "rock" && user === "paper")||(computer === "paper" && user === "scissor")|| (computer === "scissor" && user ==="rock")){
+                        result = "YOU WIN! :triumph:";
+                    }
+                    else{
+                        result = "Sorry, I win this time :hugging_face:"
+                    }
+
+                    bot.reply(message,result);
+                })
+            })
+        });
+    }
+});
+})
 //I tried to make a spotify API call.
 
 // controller.hears(["!spotify (.*)"], [
